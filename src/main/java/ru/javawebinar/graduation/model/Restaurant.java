@@ -1,4 +1,6 @@
 package ru.javawebinar.graduation.model;
 
-public class Restaurant {
+
+public class Restaurant extends AbstractEntity {
+
 }
