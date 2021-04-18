@@ -18,6 +18,10 @@ VALUES ('STEAK', 400, NOW(), 1),
        ('MILK', 35.00, NOW(), 2),
        ('EGGS', 40.00, NOW(), 2);
 
-INSERT INTO VOTE (USER_ID, RESTAURANT_ID, VOTING_TIME)
-VALUES (1, 2, '2021-01-30 10:00:00'),
-       (2, 2, '2021-01-30 9:00:00');
+INSERT INTO VOTE (USER_ID, RESTAURANT_ID, VOTING_DATE)
+VALUES (1, 2, '2021-01-30'),
+       (2, 2, '2021-01-30'),
+       (1, 3, '2021-01-29'),
+       (1, 3, '2021-01-28'),
+       (1, 2, '2021-01-27'),
+       (2, 3, '2021-01-27');

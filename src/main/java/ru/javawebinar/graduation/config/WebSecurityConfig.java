@@ -17,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.javawebinar.graduation.AuthorizedUser;
 import ru.javawebinar.graduation.model.Role;
 import ru.javawebinar.graduation.model.User;
-import ru.javawebinar.graduation.repository.CrudUserRepository;
+import ru.javawebinar.graduation.repository.UserRepository;
 
 import java.util.Optional;
 
@@ -28,7 +28,7 @@ import java.util.Optional;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     public static final PasswordEncoder ENCODER = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    private final CrudUserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Bean
     public UserDetailsService userDetailsService() {

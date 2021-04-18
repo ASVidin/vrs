@@ -19,7 +19,7 @@ import javax.validation.constraints.Size;
 public abstract class AbstractEntity implements Persistable<Integer> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer   id;
+    protected Integer id;
 
     @Column(name = "name")
     @Size(max = 128)
@@ -51,5 +51,4 @@ public abstract class AbstractEntity implements Persistable<Integer> {
     public int hashCode() {
         return id == null ? 0 : id;
     }
-
 }

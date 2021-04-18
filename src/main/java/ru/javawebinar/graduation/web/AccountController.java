@@ -11,7 +11,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javawebinar.graduation.AuthorizedUser;
 import ru.javawebinar.graduation.model.Role;
 import ru.javawebinar.graduation.model.User;
-import ru.javawebinar.graduation.repository.DataJpaUserRepository;
+import ru.javawebinar.graduation.repository.UserRepository;
 import ru.javawebinar.graduation.util.ValidationUtil;
 
 import javax.validation.Valid;
@@ -26,7 +26,7 @@ public class AccountController {
 
     static final String REST_URL = "/rest/account";
 
-    private final DataJpaUserRepository userRepository;
+    private final UserRepository userRepository;
 
     @GetMapping()
     public User get(@AuthenticationPrincipal AuthorizedUser authUser) {
