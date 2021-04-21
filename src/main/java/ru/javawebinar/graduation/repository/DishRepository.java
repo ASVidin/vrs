@@ -13,17 +13,14 @@ import java.util.List;
 
 @Transactional(readOnly = true)
 public interface DishRepository extends JpaRepository<Dish, Integer> {
-    @Query("SELECT d FROM Dish d WHERE d.inputDate=:date ORDER BY d.restaurant.id")
-    List<Dish> getAllMenuByDate(@Param("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inputDate);
+    @Query("SELECT d FROM Dish d WHERE d.dailyMenu.inputDate=:date ORDER BY d.dailyMenu.id")
+    List<Dish> getByDate(@Param("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inputDate);
 
-    @Query("SELECT d FROM Dish d WHERE d.inputDate=:date AND d.restaurant.id=:restaurantId")
-    List<Dish> getRestaurantMenuByDate(@Param("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inputDate, @Param("restaurantId") int restaurantId);
+    @Query("SELECT d FROM Dish d WHERE d.dailyMenu.id=:menu")
+    List<Dish> getByMenu(@Param("menu") int menuId);
 
-    @Query("SELECT d FROM Dish d WHERE d.restaurant.id=:restaurantId ORDER BY d.inputDate DESC")
-    List<Dish> getAllRestaurantMenu(@Param("restaurantId") int restaurantId);
-
-    @Query("SELECT d FROM Dish d JOIN FETCH d.restaurant WHERE d.id = ?1 and d.restaurant.id = ?2")
-    Dish getWithRestaurant(int id, int restaurantId);
+    @Query("SELECT d FROM Dish d JOIN FETCH d.dailyMenu WHERE d.id = ?1 and d.dailyMenu.id = ?2")
+    Dish getWithMenu(int id, int menuId);
 
     @Transactional
     @Modifying

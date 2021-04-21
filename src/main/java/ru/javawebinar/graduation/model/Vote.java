@@ -1,16 +1,20 @@
 package ru.javawebinar.graduation.model;
 
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.util.Assert;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "vote", uniqueConstraints = {@UniqueConstraint(columnNames = {"voting_date", "user_id"}, name = "votes_unique_date_user_idx")})
-@ToString(callSuper = true)
 public class Vote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,13 +24,40 @@ public class Vote {
     @NotNull
     private LocalDate voteDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @NotNull
     private User fromUser;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private Restaurant toRestaurant;
+    @NotNull
+    private Restaurant restaurant;
+
+    public Vote(Integer id, @NotNull LocalDate voteDate) {
+        this.id = id;
+        this.voteDate = voteDate;
+    }
+
+    @JsonIgnore
+    public boolean isNew() {
+        return id == null;
+    }
+
+    public int id() {
+        Assert.notNull(id, "Entity must have id");
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return "Vote{" +
+                "id=" + id +
+                ", voteDate=" + voteDate +
+                ", fromUser=" + fromUser.getId() +
+                ", toRestaurant=" + restaurant.getId() +
+                '}';
+    }
 }

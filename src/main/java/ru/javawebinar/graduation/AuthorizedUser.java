@@ -10,7 +10,6 @@ import java.io.Serial;
 @Getter
 @ToString(of = "user")
 public class AuthorizedUser extends org.springframework.security.core.userdetails.User {
-
     @Serial
     private static final long serialVersionUID = 1L;
 

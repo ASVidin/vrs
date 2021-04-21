@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.transaction.annotation.Transactional;
+import ru.javawebinar.graduation.model.Dish;
 import ru.javawebinar.graduation.model.Vote;
 
 import java.time.LocalDate;
@@ -18,12 +19,15 @@ public interface VoteRepository extends JpaRepository<Vote, Integer> {
     @Query("DELETE FROM Vote v WHERE v.id=:id")
     int delete(@Param("id") int id);
 
-    @Query("SELECT v FROM Vote v WHERE v.voteDate=:date ORDER BY v.toRestaurant.id")
+    @Query("SELECT v FROM Vote v WHERE v.voteDate=:date")
     List<Vote> getAllByDate(@Param("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate voteDate);
 
     @Query("SELECT v FROM Vote v WHERE v.fromUser.id=:userId and v.voteDate=:date ORDER BY v.voteDate DESC")
     List<Vote> getByDateForUser(@Param("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate voteDate, @Param("userId") int userId);
 
-    @Query("SELECT v FROM Vote v WHERE v.toRestaurant.id=:restaurantId ORDER BY v.voteDate DESC")
+    @Query("SELECT v FROM Vote v WHERE v.restaurant.id=:restaurantId ORDER BY v.voteDate DESC")
     List<Vote> getAllByRestaurant(@Param("restaurantId") int restaurantId);
+
+    @Query("SELECT v FROM Vote v JOIN FETCH v.fromUser WHERE v.id = ?1 and v.fromUser.id = ?2")
+    Dish getWithUser(int id, int userId);
 }

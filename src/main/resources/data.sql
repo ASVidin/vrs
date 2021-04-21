@@ -12,16 +12,23 @@ VALUES ('Karlson'),
        ('White_rabbit'),
        ('Il_patio');
 
-INSERT INTO DISH (NAME, PRICE, INPUT_DATE, RESTAURANT_ID)
-VALUES ('STEAK', 400, NOW(), 1),
-       ('RIBS', 300.00, NOW(), 1),
-       ('MILK', 35.00, NOW(), 2),
-       ('EGGS', 40.00, NOW(), 2);
+INSERT INTO MENU (INPUT_DATE, RESTAURANT_ID)
+VALUES (NOW(), 1),
+       ('2021-01-30', 2),
+       ('2021-01-30', 3);
+
+INSERT INTO DISH (NAME, PRICE, MENU_ID)
+VALUES ('STEAK', 400, 1),
+       ('RIBS', 300.00, 1),
+       ('RIBS', 350.00, 3),
+       ('MILK', 35.00, 2),
+       ('MILK', 35.00, 3),
+       ('EGGS', 40.00, 2);
 
 INSERT INTO VOTE (USER_ID, RESTAURANT_ID, VOTING_DATE)
-VALUES (1, 2, '2021-01-30'),
-       (2, 2, '2021-01-30'),
-       (1, 3, '2021-01-29'),
+VALUES (1, 1, '2021-01-30'),
+       (2, 1, '2021-01-30'),
+       (1, 2, '2021-01-29'),
        (1, 3, '2021-01-28'),
        (1, 2, '2021-01-27'),
        (2, 3, '2021-01-27');

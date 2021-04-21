@@ -24,7 +24,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @ToString(callSuper = true, exclude = {"password"})
-public class User extends AbstractEntity implements Serializable {
+public class User extends AbstractNamedEntity implements Serializable {
     @Column(name = "email", nullable = false, unique = true)
     @Email
     @NotEmpty

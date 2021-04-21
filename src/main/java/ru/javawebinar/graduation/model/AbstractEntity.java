@@ -7,23 +7,18 @@ import org.springframework.data.util.ProxyUtils;
 import org.springframework.util.Assert;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 
 @MappedSuperclass
 @Access(AccessType.FIELD)
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
 public abstract class AbstractEntity implements Persistable<Integer> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Integer id;
-
-    @Column(name = "name")
-    @Size(max = 128)
-    private String name;
 
     @JsonIgnore
     @Override

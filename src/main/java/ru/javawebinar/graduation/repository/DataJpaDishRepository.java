@@ -6,20 +6,20 @@ import ru.javawebinar.graduation.model.Dish;
 
 @Repository
 public class DataJpaDishRepository {
-    RestaurantRepository restaurantRepository;
+    DailyMenuRepositories dailyMenuRepositories;
     DishRepository dishRepository;
 
-    public DataJpaDishRepository(RestaurantRepository restaurantRepository, DishRepository dishRepository) {
-        this.restaurantRepository = restaurantRepository;
+    public DataJpaDishRepository(DailyMenuRepositories dailyMenuRepositories, DishRepository dishRepository) {
+        this.dailyMenuRepositories = dailyMenuRepositories;
         this.dishRepository = dishRepository;
     }
 
     @Transactional
-    public Dish save(Dish dish, int restaurantId) {
-        if (!dish.isNew() && dishRepository.getWithRestaurant(dish.getId(), restaurantId) == null) {
+    public Dish save(Dish dish, int menuId) {
+        if (!dish.isNew() && dishRepository.getWithMenu(dish.getId(), menuId) == null) {
             return null;
         }
-        dish.setRestaurant(restaurantRepository.getOne(restaurantId));
+        dish.setDailyMenu(dailyMenuRepositories.getOne(menuId));
         return dishRepository.save(dish);
     }
 }

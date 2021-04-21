@@ -1,25 +1,22 @@
 package ru.javawebinar.graduation.model;
 
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.List;
 
 @Entity
 @Table(name = "restaurant", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"}, name = "restaurants_unique__name_idx")})
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Restaurant extends AbstractEntity {
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
-    @JsonManagedReference
-    private List<Dish> menu;
-
-    public Restaurant(Integer id, @Size(max = 128) String name) {
+@NoArgsConstructor
+@ToString(callSuper = true)
+public class Restaurant extends AbstractNamedEntity {
+    public Restaurant(Integer id, @NotBlank @Size(min = 2, max = 100) String name) {
         super(id, name);
     }
 }
