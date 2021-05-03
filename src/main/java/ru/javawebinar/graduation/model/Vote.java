@@ -41,6 +41,12 @@ public class Vote {
         this.voteDate = voteDate;
     }
 
+    public Vote(@NotNull LocalDate voteDate, @NotNull User fromUser, @NotNull Restaurant restaurant) {
+        this.voteDate = voteDate;
+        this.fromUser = fromUser;
+        this.restaurant = restaurant;
+    }
+
     @JsonIgnore
     public boolean isNew() {
         return id == null;

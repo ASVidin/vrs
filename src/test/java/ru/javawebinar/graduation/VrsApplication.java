@@ -5,7 +5,9 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import ru.javawebinar.graduation.model.DailyMenu;
 import ru.javawebinar.graduation.repository.*;
+import ru.javawebinar.graduation.web.VoteController;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -21,6 +23,7 @@ public class VrsApplication implements ApplicationRunner {
     private final DataJpaDailyMenuRepository dataJpaDailyMenuRepository;
     private final VoteRepository voteRepository;
     private final DataJpaVoteRepository dataJpaVoteRepository;
+    private final VoteController voteController;
 
     public static void main(String[] args) {
         SpringApplication.run(VrsApplication.class, args);
@@ -28,27 +31,29 @@ public class VrsApplication implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
+
+        System.out.println("---User---");
         System.out.println(userRepository.save(UserTestData.getNew()));
         System.out.println(userRepository.save(UserTestData.getUpdated()));
 //        System.out.println(userRepository.delete(1));
         System.out.println(userRepository.findByEmailIgnoreCase("new@gmail.com"));
-
+        System.out.println("---Restaurant---");
         System.out.println(restaurantRepository.save(RestaurantTestData.getNew()));
 //        System.out.println(restaurantRepository.delete(1));
         System.out.println(restaurantRepository.findAll());
         System.out.println(restaurantRepository.save(RestaurantTestData.getUpdated()));
-
+        System.out.println("---Menu---");
         System.out.println(dailyMenuRepositories.findAll());
         System.out.println(dailyMenuRepositories.getByRestaurant(1));
         System.out.println(dailyMenuRepositories.getByDate(LocalDate.of(2021, Month.APRIL, 21)));
         System.out.println(dataJpaDailyMenuRepository.save(DailyMenuTestData.getNew(), 4));
-
+        System.out.println("---Dish---");
         System.out.println(dataJpaDishRepository.save(DishTestData.getUpdated(), 3));
         System.out.println(dishRepository.getByDate(LocalDate.of(2021, Month.JANUARY, 30)));
         System.out.println(dataJpaDishRepository.save(DishTestData.getNew(), 4));
         System.out.println(dishRepository.getByMenu(4));
         System.out.println(dishRepository.delete(1));
-
+        System.out.println("---Vote---");
         voteRepository.findAll()
                 .forEach(System.out::println);
         System.out.println(voteRepository.delete(1));
@@ -58,6 +63,6 @@ public class VrsApplication implements ApplicationRunner {
                 .forEach(System.out::println);
         voteRepository.getAllByRestaurant(3)
                 .forEach(System.out::println);
-        System.out.println(dataJpaVoteRepository.save(VoteTestData.getNew(), 4, 3));
+        voteController.create(dailyMenuRepositories.getByRestaurant(1).get(0));
     }
 }
