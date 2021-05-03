@@ -7,9 +7,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.graduation.AuthorizedUser;
-import ru.javawebinar.graduation.model.DailyMenu;
+import ru.javawebinar.graduation.model.Restaurant;
 import ru.javawebinar.graduation.model.Vote;
 import ru.javawebinar.graduation.repository.dataJpaRepository.DataJpaVoteRepository;
+import ru.javawebinar.graduation.repository.dataJpaRepository.RestaurantRepository;
 import ru.javawebinar.graduation.repository.dataJpaRepository.UserRepository;
 import ru.javawebinar.graduation.util.TimeUtil;
 import ru.javawebinar.graduation.util.ValidationUtil;
@@ -30,6 +31,7 @@ public class VoteController {
 
     private final DataJpaVoteRepository voteRepository;
     private final UserRepository userRepository;
+    private final RestaurantRepository restaurantRepository;
 
     @GetMapping("/{id}")
     public ResponseEntity<Vote> get(@PathVariable int id) {
@@ -52,29 +54,30 @@ public class VoteController {
     }
 
     @PostMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Vote> createOrUpdate(@RequestBody DailyMenu dailyMenu) {
+    public ResponseEntity<Vote> createOrUpdate(@RequestBody Restaurant restaurant) {
         // change user
         int userId = AuthorizedUser.getTestId();
 //        int userId = AuthorizedUser.authUserId();
         LocalDateTime currentDateTime = LocalDateTime.now();
+        LocalDate currentDate = TimeUtil.convertToLocalDate(currentDateTime);
 
-        Vote vote = voteRepository.getByDateForUser(TimeUtil.convertToLocalDate(currentDateTime), userId)
+        Vote vote = voteRepository.getByDateForUser(currentDate, userId)
                 .map(v -> {
                     String operationType = "Return";
                     if (TimeUtil.isBeforeDeadLine(currentDateTime)) {
-                        v.setRestaurant(dailyMenu.getRestaurant());
+                        v.setRestaurant(restaurant);
                         operationType = "Change";
                     }
-                    log.info("{} current vote for {} from user {} for {}", operationType, v.getRestaurant(), userId, dailyMenu.getInputDate());
+                    log.info("{} current vote for {} from user {} for {}", operationType, v.getRestaurant(), userId, currentDate);
                     return v;
                 })
                 .orElseGet(() -> {
-                    log.info("Create vote for {} from user {} for {}", dailyMenu.getRestaurant(), userId, dailyMenu.getInputDate());
-                    Vote createdVote = new Vote(dailyMenu.getInputDate(), userRepository.getOne(userId), dailyMenu.getRestaurant());
+                    log.info("Create vote from user {} for {}", userId, currentDate);
+                    Vote createdVote = new Vote(currentDate, userRepository.getOne(userId), restaurant);
                     ValidationUtil.checkNew(createdVote);
                     return createdVote;
                 });
-        voteRepository.save(vote, dailyMenu.id(), userId);
+        voteRepository.save(vote, restaurant, userId);
 
         return new ResponseEntity<>(vote, HttpStatus.OK);
     }

@@ -7,7 +7,7 @@ public class DishTestData {
     public static final int DISH_ID = 3;
 
     public static Dish getNew() {
-        return new Dish(null, "RIBS", 33);
+        return new Dish(null, "NEW_DISH", 333);
     }
 
     public static Dish getUpdated() {

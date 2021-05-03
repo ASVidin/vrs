@@ -6,7 +6,6 @@ import ru.javawebinar.graduation.model.DailyMenu;
 import ru.javawebinar.graduation.repository.DailyMenuRepository;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Repository
 public class DataJpaDailyMenuRepository implements DailyMenuRepository {
@@ -32,21 +31,4 @@ public class DataJpaDailyMenuRepository implements DailyMenuRepository {
     public int delete(int id) {
         return dailyMenuRepositories.delete(id);
     }
-
-    @Override
-    public List<DailyMenu> getByDate(LocalDate inputDate) {
-        return dailyMenuRepositories.getByDate(inputDate);
-    }
-
-    @Override
-    public List<DailyMenu> getByRestaurant(int restaurantId) {
-        return dailyMenuRepositories.getByRestaurant(restaurantId);
-    }
-
-    @Override
-    public DailyMenu getWithRestaurant(int id, int restaurantId) {
-        return dailyMenuRepositories.getWithRestaurant(id, restaurantId);
-    }
-
-
 }

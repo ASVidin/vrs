@@ -2,6 +2,7 @@ package ru.javawebinar.graduation.repository.dataJpaRepository;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ru.javawebinar.graduation.model.Restaurant;
 import ru.javawebinar.graduation.model.Vote;
 import ru.javawebinar.graduation.repository.VoteRepository;
 
@@ -29,11 +30,11 @@ public class DataJpaVoteRepository implements VoteRepository {
 
     @Transactional
     @Override
-    public Vote save(Vote vote, int menuId, int userId) {
+    public Vote save(Vote vote, Restaurant restaurant, int userId) {
         if (!vote.isNew() && voteRepository.getWithUser(vote.id(), userId) == null) {
             return null;
         }
-        vote.setRestaurant(restaurantRepository.getOne(menuId));
+        vote.setRestaurant(restaurant);
         vote.setFromUser(userRepository.getOne(userId));
         return voteRepository.save(vote);
     }
@@ -51,15 +52,5 @@ public class DataJpaVoteRepository implements VoteRepository {
     @Override
     public Optional<Vote> getByDateForUser(LocalDate voteDate, int userId) {
         return voteRepository.getByDateForUser(voteDate, userId);
-    }
-
-    @Override
-    public List<Vote> getAllByRestaurant(int restaurantId) {
-        return voteRepository.getAllByRestaurant(restaurantId);
-    }
-
-    @Override
-    public Vote getWithUser(int id, int userId) {
-        return voteRepository.getWithUser(id, userId);
     }
 }

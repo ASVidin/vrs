@@ -23,7 +23,6 @@ import java.util.Set;
 @AllArgsConstructor
 @Slf4j
 public class AccountController {
-
     static final String REST_URL = "/rest/account";
 
     private final UserRepository userRepository;
