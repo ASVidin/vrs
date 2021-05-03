@@ -11,7 +11,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javawebinar.graduation.AuthorizedUser;
 import ru.javawebinar.graduation.model.Role;
 import ru.javawebinar.graduation.model.User;
-import ru.javawebinar.graduation.repository.UserRepository;
+import ru.javawebinar.graduation.repository.dataJpaRepository.UserRepository;
 import ru.javawebinar.graduation.util.ValidationUtil;
 
 import javax.validation.Valid;

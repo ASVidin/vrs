@@ -5,9 +5,10 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class TimeUtil {
+    private static final LocalTime DEADLINE = LocalTime.of(11, 0);
 
     public static boolean isBeforeDeadLine(LocalDateTime voteTime) {
-        return convertToLocalTime(voteTime).isBefore(LocalTime.of(11, 0));
+        return convertToLocalTime(voteTime).isBefore(DEADLINE);
     }
 
     private static LocalTime convertToLocalTime(LocalDateTime time) {

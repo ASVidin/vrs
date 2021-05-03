@@ -17,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.javawebinar.graduation.AuthorizedUser;
 import ru.javawebinar.graduation.model.Role;
 import ru.javawebinar.graduation.model.User;
-import ru.javawebinar.graduation.repository.UserRepository;
+import ru.javawebinar.graduation.repository.dataJpaRepository.UserRepository;
 
 import java.util.Optional;
 

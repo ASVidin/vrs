@@ -15,11 +15,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "vote", uniqueConstraints = {@UniqueConstraint(columnNames = {"voting_date", "user_id"}, name = "votes_unique_date_user_idx")})
-public class Vote {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Integer id;
-
+public class Vote extends AbstractEntity {
     @Column(name = "voting_date", nullable = false)
     @NotNull
     private LocalDate voteDate;
