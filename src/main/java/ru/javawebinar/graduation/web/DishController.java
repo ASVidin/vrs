@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Slf4j
 public class DishController {
-    static final String REST_URL = "/rest/dish";
+    static final String REST_URL = "/rest/restaurant/menu/dish";
 
     private final DataJpaDishRepository dishRepository;
     private final DataJpaDailyMenuRepository dailyMenuRepository;

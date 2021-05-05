@@ -1,7 +1,9 @@
 package ru.javawebinar.graduation.util;
 
+import lombok.experimental.UtilityClass;
 import ru.javawebinar.graduation.model.AbstractEntity;
 
+@UtilityClass
 public class ValidationUtil {
 
     public static void checkNew(AbstractEntity entity) {

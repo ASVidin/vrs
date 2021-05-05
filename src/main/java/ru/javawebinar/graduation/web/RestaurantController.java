@@ -21,7 +21,7 @@ public class RestaurantController {
 
     private final RestaurantRepository restaurantRepository;
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<Restaurant> get(@PathVariable int id) {
         log.info("get restaurant {}", id);
         Restaurant restaurant = checkNotFoundWithId(restaurantRepository.findById(id).orElse(null), id);

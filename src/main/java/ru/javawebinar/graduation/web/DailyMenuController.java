@@ -15,7 +15,7 @@ import ru.javawebinar.graduation.repository.dataJpaRepository.DataJpaDailyMenuRe
 @AllArgsConstructor
 @Slf4j
 public class DailyMenuController {
-    static final String REST_URL = "/rest/menu";
+    static final String REST_URL = "/rest/restaurant/menu";
 
     private final DataJpaDailyMenuRepository dailyMenuRepository;
 

@@ -7,14 +7,13 @@ import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-
 @MappedSuperclass
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @ToString(callSuper = true)
-public abstract class AbstractNamedEntity extends AbstractEntity {
+public abstract class AbstractNamedEntity extends AbstractEntity  {
     @NotBlank
     @Size(min = 2, max = 100)
     @Column(name = "name", nullable = false)

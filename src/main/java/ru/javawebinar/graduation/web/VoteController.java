@@ -17,7 +17,6 @@ import ru.javawebinar.graduation.util.ValidationUtil;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.List;
 
 import static ru.javawebinar.graduation.util.ValidationUtil.checkNotFoundWithId;
@@ -27,17 +26,15 @@ import static ru.javawebinar.graduation.util.ValidationUtil.checkNotFoundWithId;
 @AllArgsConstructor
 @Slf4j
 public class VoteController {
-    static final String REST_URL = "/rest/vote";
+    static final String REST_URL = "/rest/account/vote";
 
     private final DataJpaVoteRepository voteRepository;
     private final UserRepository userRepository;
     private final RestaurantRepository restaurantRepository;
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<Vote> get(@PathVariable int id) {
-        // change user
-        int userId = AuthorizedUser.getTestId();
-//        int userId = AuthorizedUser.authUserId();
+        int userId = AuthorizedUser.authUserId();
         log.info("vote {} from user {}", id, userId);
         Vote vote =  checkNotFoundWithId(voteRepository.get(id, userId), id);
         return new ResponseEntity<>(vote, HttpStatus.OK);
@@ -45,9 +42,7 @@ public class VoteController {
 
     @GetMapping
     public ResponseEntity<List<Vote>> getAll() {
-        // change current date
-        LocalDate currentDate = LocalDate.of(2021, Month.JANUARY, 27);
-//        LocalDate currentDate = TimeUtil.convertToLocalDate(LocalDateTime.now());
+        LocalDate currentDate = TimeUtil.convertToLocalDate(LocalDateTime.now());
         log.info("votes for {}", currentDate);
         List<Vote> votes = voteRepository.getAllByDate(currentDate);
         return !votes.isEmpty() ? new ResponseEntity<>(votes, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -55,9 +50,7 @@ public class VoteController {
 
     @PostMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Vote> createOrUpdate(@RequestBody Restaurant restaurant) {
-        // change user
-        int userId = AuthorizedUser.getTestId();
-//        int userId = AuthorizedUser.authUserId();
+        int userId = AuthorizedUser.authUserId();
         LocalDateTime currentDateTime = LocalDateTime.now();
         LocalDate currentDate = TimeUtil.convertToLocalDate(currentDateTime);
 
