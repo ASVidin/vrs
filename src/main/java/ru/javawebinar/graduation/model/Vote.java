@@ -14,6 +14,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 @Table(name = "vote", uniqueConstraints = {@UniqueConstraint(columnNames = {"voting_date", "user_id"}, name = "votes_unique_date_user_idx")})
 public class Vote extends AbstractEntity {
     @Column(name = "voting_date", nullable = false)
@@ -24,9 +25,10 @@ public class Vote extends AbstractEntity {
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @NotNull
-    private User fromUser;
+    @JsonIgnore
+    private User user;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @NotNull
@@ -37,9 +39,9 @@ public class Vote extends AbstractEntity {
         this.voteDate = voteDate;
     }
 
-    public Vote(@NotNull LocalDate voteDate, @NotNull User fromUser, @NotNull Restaurant restaurant) {
+    public Vote(@NotNull LocalDate voteDate, @NotNull User user, @NotNull Restaurant restaurant) {
         this.voteDate = voteDate;
-        this.fromUser = fromUser;
+        this.user = user;
         this.restaurant = restaurant;
     }
 
@@ -51,15 +53,5 @@ public class Vote extends AbstractEntity {
     public int id() {
         Assert.notNull(id, "Entity must have id");
         return id;
-    }
-
-    @Override
-    public String toString() {
-        return "Vote{" +
-                "id=" + id +
-                ", voteDate=" + voteDate +
-                ", fromUser=" + fromUser.getId() +
-                ", toRestaurant=" + restaurant.getId() +
-                '}';
     }
 }

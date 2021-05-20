@@ -1,22 +1,19 @@
 package ru.javawebinar.graduation.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.graduation.model.Dish;
 
-import java.time.LocalDate;
-import java.util.List;
+@Transactional(readOnly = true)
+public interface DishRepository extends JpaRepository<Dish, Integer> {
+    @Query("SELECT d FROM Dish d JOIN FETCH d.dailyMenu WHERE d.id = ?1 and d.dailyMenu.id = ?2")
+    Dish getWithMenu(int id, int menuId);
 
-public interface DishRepository {
-    Dish save(Dish dish, int menuId);
-
-    List<Dish> getByDate(LocalDate inputDate);
-
-    List<Dish> getByMenu(int menuId);
-
-    default Dish getWithMenu(int id, int menuId) {
-        throw new UnsupportedOperationException();
-    }
-
-    int delete(int id);
-
-
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Dish d WHERE d.id=:id")
+    int delete(@Param("id") int id);
 }

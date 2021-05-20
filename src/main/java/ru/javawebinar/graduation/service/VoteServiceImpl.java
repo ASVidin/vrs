@@ -1,22 +1,23 @@
-package ru.javawebinar.graduation.repository.dataJpaRepository;
+package ru.javawebinar.graduation.service;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.graduation.model.Restaurant;
 import ru.javawebinar.graduation.model.Vote;
 import ru.javawebinar.graduation.repository.VoteRepository;
+import ru.javawebinar.graduation.repository.RestaurantRepository;
+import ru.javawebinar.graduation.repository.UserRepository;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
-@Repository
-public class DataJpaVoteRepository implements VoteRepository {
+@Service
+public class VoteServiceImpl implements VoteService {
     RestaurantRepository restaurantRepository;
     UserRepository userRepository;
-    CrudVoteRepository voteRepository;
+    VoteRepository voteRepository;
 
-    public DataJpaVoteRepository(RestaurantRepository restaurantRepository, UserRepository userRepository, CrudVoteRepository voteRepository) {
+    public VoteServiceImpl(RestaurantRepository restaurantRepository, UserRepository userRepository, VoteRepository voteRepository) {
         this.restaurantRepository = restaurantRepository;
         this.userRepository = userRepository;
         this.voteRepository = voteRepository;
@@ -24,7 +25,7 @@ public class DataJpaVoteRepository implements VoteRepository {
 
     public Vote get(int id, int userId) {
         return voteRepository.findById(id)
-                .filter(v -> v.getFromUser().id() == userId)
+                .filter(v -> v.getUser().id() == userId)
                 .orElse(null);
     }
 
@@ -35,18 +36,13 @@ public class DataJpaVoteRepository implements VoteRepository {
             return null;
         }
         vote.setRestaurant(restaurant);
-        vote.setFromUser(userRepository.getOne(userId));
+        vote.setUser(userRepository.getOne(userId));
         return voteRepository.save(vote);
     }
 
     @Override
     public int delete(int id) {
         return voteRepository.delete(id);
-    }
-
-    @Override
-    public List<Vote> getAllByDate(LocalDate voteDate) {
-        return voteRepository.getAllByDate(voteDate);
     }
 
     @Override

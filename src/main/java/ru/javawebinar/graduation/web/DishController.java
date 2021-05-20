@@ -8,11 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.graduation.model.DailyMenu;
 import ru.javawebinar.graduation.model.Dish;
-import ru.javawebinar.graduation.model.Restaurant;
-import ru.javawebinar.graduation.repository.dataJpaRepository.DataJpaDailyMenuRepository;
-import ru.javawebinar.graduation.repository.dataJpaRepository.DataJpaDishRepository;
-import ru.javawebinar.graduation.repository.dataJpaRepository.RestaurantRepository;
+import ru.javawebinar.graduation.repository.RestaurantRepository;
+import ru.javawebinar.graduation.service.DailyMenuServiceImpl;
+import ru.javawebinar.graduation.service.DishServiceImpl;
 import ru.javawebinar.graduation.util.TimeUtil;
+import ru.javawebinar.graduation.util.ValidationUtil;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,28 +22,28 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Slf4j
 public class DishController {
-    static final String REST_URL = "/rest/restaurant/menu/dish";
+    static final String REST_URL = "/rest/restaurants/{restaurantId}/dishes";
 
-    private final DataJpaDishRepository dishRepository;
-    private final DataJpaDailyMenuRepository dailyMenuRepository;
+    private final DishServiceImpl dishService;
+    private final DailyMenuServiceImpl dailyMenuService;
     private final RestaurantRepository restaurantRepository;
 
-    @PostMapping(value = "/created", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(value = HttpStatus.CREATED)
-    public ResponseEntity<Dish> create(@RequestBody Dish dish, @RequestBody Restaurant restaurant) {
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Dish> create(@RequestBody Dish dish, @PathVariable("restaurantId") int restaurantId) {
         LocalDate currentDate = TimeUtil.convertToLocalDate(LocalDateTime.now());
 
-        DailyMenu dailyMenu = restaurantRepository.getWithDailyMenu(restaurant.id()).getMenu().stream()
-                .filter(menu -> menu.getInputDate().isEqual(currentDate))
-                .peek(menu -> log.info("Return existing menu {} for restaurant {}", menu, restaurant))
+        DailyMenu dailyMenu = restaurantRepository.getWithDailyMenu(restaurantId).getMenu().stream()
+                .filter(menu -> menu.getDate().isEqual(currentDate))
+                .peek(menu -> log.info("Return existing menu {} for restaurant {}", menu, restaurantId))
                 .findFirst()
                 .orElseGet(() -> {
-                    log.info("Create new menu for restaurant {}", restaurant);
-                    return dailyMenuRepository.save(new DailyMenu(currentDate), restaurant.id());
+                    log.info("Create new menu for restaurant {}", restaurantId);
+                    return dailyMenuService.save(new DailyMenu(currentDate), restaurantId);
                 });
 
         Dish created = new Dish(dish);
-        dishRepository.save(created, dailyMenu.id());
+        ValidationUtil.checkNew(created);
+        dishService.save(created, dailyMenu.id());
 
         return new ResponseEntity<>(dish, HttpStatus.OK);
     }

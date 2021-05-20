@@ -1,4 +1,4 @@
-package ru.javawebinar.graduation.repository.dataJpaRepository;
+package ru.javawebinar.graduation.repository;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;

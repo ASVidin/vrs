@@ -19,7 +19,7 @@ import javax.validation.constraints.Size;
 @ToString(callSuper = true, exclude = "dailyMenu")
 public class Dish extends AbstractNamedEntity {
     @Column(name = "price", nullable = false)
-    @Range(min = 1, max = 5000)
+    @Range(min = 1, max = 500000)
     private int price;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -33,12 +33,12 @@ public class Dish extends AbstractNamedEntity {
         this(dish.getName(), dish.getPrice());
     }
 
-    public Dish(Integer id, @Size(max = 128) String name, @Range(min = 1, max = 5000) int price) {
+    public Dish(Integer id, @Size(max = 128) String name, @Range(min = 1, max = 500000) int price) {
         super(id, name);
         this.price = price;
     }
 
-    public Dish(@NotBlank @Size(min = 2, max = 100) String name, @Range(min = 1, max = 5000) int price) {
+    public Dish(@NotBlank @Size(min = 2, max = 100) String name, @Range(min = 1, max = 500000) int price) {
         super(name);
         this.price = price;
     }

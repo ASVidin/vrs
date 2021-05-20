@@ -17,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.javawebinar.graduation.AuthorizedUser;
 import ru.javawebinar.graduation.model.Role;
 import ru.javawebinar.graduation.model.User;
-import ru.javawebinar.graduation.repository.dataJpaRepository.UserRepository;
+import ru.javawebinar.graduation.repository.UserRepository;
 
 import java.util.Optional;
 
@@ -49,9 +49,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/rest/account/registered").anonymous()
-                .antMatchers("/rest/account").hasRole(Role.USER.name())
-                .antMatchers("/rest/**").hasRole(Role.ADMIN.name())
+                .antMatchers("/rest/account/register").anonymous()
+                .antMatchers("/rest/**").authenticated()
+                .antMatchers("/rest/users**").hasRole(Role.ADMIN.name())
                 .and().httpBasic()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().csrf().disable();

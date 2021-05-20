@@ -5,9 +5,6 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import ru.javawebinar.graduation.repository.dataJpaRepository.DataJpaDailyMenuRepository;
-import ru.javawebinar.graduation.repository.dataJpaRepository.UserRepository;
-import ru.javawebinar.graduation.web.*;
 
 @SpringBootApplication
 @AllArgsConstructor

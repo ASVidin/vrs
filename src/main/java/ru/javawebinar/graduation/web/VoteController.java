@@ -9,15 +9,14 @@ import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.graduation.AuthorizedUser;
 import ru.javawebinar.graduation.model.Restaurant;
 import ru.javawebinar.graduation.model.Vote;
-import ru.javawebinar.graduation.repository.dataJpaRepository.DataJpaVoteRepository;
-import ru.javawebinar.graduation.repository.dataJpaRepository.RestaurantRepository;
-import ru.javawebinar.graduation.repository.dataJpaRepository.UserRepository;
+import ru.javawebinar.graduation.service.VoteServiceImpl;
+import ru.javawebinar.graduation.repository.UserRepository;
+import ru.javawebinar.graduation.util.IllegalRequestDataException;
 import ru.javawebinar.graduation.util.TimeUtil;
 import ru.javawebinar.graduation.util.ValidationUtil;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static ru.javawebinar.graduation.util.ValidationUtil.checkNotFoundWithId;
 
@@ -26,42 +25,34 @@ import static ru.javawebinar.graduation.util.ValidationUtil.checkNotFoundWithId;
 @AllArgsConstructor
 @Slf4j
 public class VoteController {
-    static final String REST_URL = "/rest/account/vote";
+    static final String REST_URL = "/rest/votes";
 
-    private final DataJpaVoteRepository voteRepository;
+    private final VoteServiceImpl voteService;
     private final UserRepository userRepository;
-    private final RestaurantRepository restaurantRepository;
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Vote> get(@PathVariable int id) {
         int userId = AuthorizedUser.authUserId();
         log.info("vote {} from user {}", id, userId);
-        Vote vote =  checkNotFoundWithId(voteRepository.get(id, userId), id);
+        Vote vote =  checkNotFoundWithId(voteService.get(id, userId), id);
         return new ResponseEntity<>(vote, HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Vote>> getAll() {
-        LocalDate currentDate = TimeUtil.convertToLocalDate(LocalDateTime.now());
-        log.info("votes for {}", currentDate);
-        List<Vote> votes = voteRepository.getAllByDate(currentDate);
-        return !votes.isEmpty() ? new ResponseEntity<>(votes, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
     @PostMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Vote> createOrUpdate(@RequestBody Restaurant restaurant) {
+    public ResponseEntity<Vote> createOrUpdate(@PathVariable("id") Restaurant restaurant) {
         int userId = AuthorizedUser.authUserId();
         LocalDateTime currentDateTime = LocalDateTime.now();
         LocalDate currentDate = TimeUtil.convertToLocalDate(currentDateTime);
 
-        Vote vote = voteRepository.getByDateForUser(currentDate, userId)
+        Vote vote = voteService.getByDateForUser(currentDate, userId)
                 .map(v -> {
-                    String operationType = "Return";
                     if (TimeUtil.isBeforeDeadLine(currentDateTime)) {
+                        ValidationUtil.assureIdConsistent(v, v.id());
                         v.setRestaurant(restaurant);
-                        operationType = "Change";
+                    } else {
+                        throw new IllegalRequestDataException(currentDate + " must be one per day");
                     }
-                    log.info("{} current vote for {} from user {} for {}", operationType, v.getRestaurant(), userId, currentDate);
+                    log.info("Change current vote for {} from user {} for {}", v.getRestaurant(), userId, currentDate);
                     return v;
                 })
                 .orElseGet(() -> {
@@ -70,7 +61,7 @@ public class VoteController {
                     ValidationUtil.checkNew(createdVote);
                     return createdVote;
                 });
-        voteRepository.save(vote, restaurant, userId);
+        voteService.save(vote, restaurant, userId);
 
         return new ResponseEntity<>(vote, HttpStatus.OK);
     }

@@ -7,7 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.graduation.model.Restaurant;
-import ru.javawebinar.graduation.repository.dataJpaRepository.RestaurantRepository;
+import ru.javawebinar.graduation.repository.RestaurantRepository;
 import ru.javawebinar.graduation.util.ValidationUtil;
 
 import static ru.javawebinar.graduation.util.ValidationUtil.checkNotFoundWithId;
@@ -17,7 +17,7 @@ import static ru.javawebinar.graduation.util.ValidationUtil.checkNotFoundWithId;
 @AllArgsConstructor
 @Slf4j
 public class RestaurantController {
-    static final String REST_URL = "/rest/restaurant";
+    static final String REST_URL = "/rest/restaurants";
 
     private final RestaurantRepository restaurantRepository;
 
@@ -28,13 +28,24 @@ public class RestaurantController {
         return new ResponseEntity<>(restaurant, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/created", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(value = HttpStatus.CREATED)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> create(@RequestBody Restaurant restaurant) {
         log.info("created {}", restaurant);
         ValidationUtil.checkNew(restaurant);
         restaurant = restaurantRepository.save(restaurant);
-
         return new ResponseEntity<>(restaurant, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void update(@RequestBody Restaurant restaurant, @PathVariable("id") int id) {
+        log.info("Update {} with id = {}", restaurant, id);
+        ValidationUtil.assureIdConsistent(restaurant, id);
+        restaurantRepository.save(restaurant);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public void delete(@PathVariable("id") int id) {
+        log.info("Delete Restaurant {}", id);
+        restaurantRepository.delete(id);
     }
 }

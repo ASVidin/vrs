@@ -19,7 +19,7 @@ spring:
     basePath: /rest
     returnBodyOnCreate: true
 
-  logging:
-    level:
-      root: WARN
-      ru.javawebinar.graduation: DEBUG
+logging:
+  level:
+    root: WARN
+    ru.javawebinar.graduation: DEBUG

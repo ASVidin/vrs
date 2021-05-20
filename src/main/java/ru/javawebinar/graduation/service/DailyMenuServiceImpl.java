@@ -1,18 +1,17 @@
-package ru.javawebinar.graduation.repository.dataJpaRepository;
+package ru.javawebinar.graduation.service;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.graduation.model.DailyMenu;
-import ru.javawebinar.graduation.repository.DailyMenuRepository;
+import ru.javawebinar.graduation.repository.DailyMenuRepositories;
+import ru.javawebinar.graduation.repository.RestaurantRepository;
 
-import java.time.LocalDate;
-
-@Repository
-public class DataJpaDailyMenuRepository implements DailyMenuRepository {
+@Service
+public class DailyMenuServiceImpl implements DailyMenuService {
     RestaurantRepository restaurantRepository;
-    CrudDailyMenuRepositories dailyMenuRepositories;
+    DailyMenuRepositories dailyMenuRepositories;
 
-    public DataJpaDailyMenuRepository(RestaurantRepository restaurantRepository, CrudDailyMenuRepositories dailyMenuRepositories) {
+    public DailyMenuServiceImpl(RestaurantRepository restaurantRepository, DailyMenuRepositories dailyMenuRepositories) {
         this.dailyMenuRepositories = dailyMenuRepositories;
         this.restaurantRepository = restaurantRepository;
     }
@@ -28,7 +27,7 @@ public class DataJpaDailyMenuRepository implements DailyMenuRepository {
     }
 
     @Override
-    public int delete(int id) {
-        return dailyMenuRepositories.delete(id);
+    public int delete(int id, int restaurantId) {
+        return dailyMenuRepositories.delete(id, restaurantId);
     }
 }
